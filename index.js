@@ -28,19 +28,25 @@ async function run() {
 
     app.get("/users", async (req, res) => {
       const result = await userCollection.find().toArray();
-      res.send(result); 
+      res.send(result);
     });
 
     app.get("/foods", async (req, res) => {
       const result = await foodCollection.find().toArray();
-      res.send(result)
-    })
+      res.send(result);
+    });
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
 
     app.post("/foods", async (req, res) => {
       const food = req.body;
       const result = await foodCollection.insertOne(food);
-      res.send(result)
-    })
+      res.send(result);
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
