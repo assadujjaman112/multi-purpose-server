@@ -1,11 +1,12 @@
 const { insertBooking } = require("../services/bookings");
+const { sendSuccess, sendError } = require("../utils/response");
 
 async function createBooking(req, res) {
   try {
-    const result = await insertBooking(req.body);
-    res.send(result);
+    const data = await insertBooking(req.body);
+    sendSuccess(res, data, 201);
   } catch (err) {
-    res.status(500).send({ error: "Failed to create booking" });
+    sendError(res, "Failed to create booking");
   }
 }
 

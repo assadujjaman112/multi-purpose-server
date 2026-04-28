@@ -1,20 +1,21 @@
 const { findAllFoods, insertFood } = require("../services/foods");
+const { sendSuccess, sendError } = require("../utils/response");
 
 async function getAllFoods(req, res) {
   try {
-    const result = await findAllFoods();
-    res.send(result);
+    const data = await findAllFoods();
+    sendSuccess(res, data);
   } catch (err) {
-    res.status(500).send({ error: "Failed to fetch foods" });
+    sendError(res, "Failed to fetch foods");
   }
 }
 
 async function createFood(req, res) {
   try {
-    const result = await insertFood(req.body);
-    res.send(result);
+    const data = await insertFood(req.body);
+    sendSuccess(res, data, 201);
   } catch (err) {
-    res.status(500).send({ error: "Failed to create food" });
+    sendError(res, "Failed to create food");
   }
 }
 

@@ -1,22 +1,23 @@
 const { insertCartItem, findCartItems } = require("../services/carts");
-
-async function createCartItem(req, res) {
-  try {
-    const result = await insertCartItem(req.body);
-    res.send(result);
-  } catch (err) {
-    res.status(500).send({ error: "Failed to add item to cart" });
-  }
-}
+const { sendSuccess, sendError } = require("../utils/response");
 
 async function getCartItems(req, res) {
   try {
     const { email } = req.query;
     const query = email ? { customerEmail: email } : {};
-    const result = await findCartItems(query);
-    res.send(result);
+    const data = await findCartItems(query);
+    sendSuccess(res, data);
   } catch (err) {
-    res.status(500).send({ error: "Failed to get cart items" });
+    sendError(res, "Failed to get cart items");
+  }
+}
+
+async function createCartItem(req, res) {
+  try {
+    const data = await insertCartItem(req.body);
+    sendSuccess(res, data, 201);
+  } catch (err) {
+    sendError(res, "Failed to add item to cart");
   }
 }
 
