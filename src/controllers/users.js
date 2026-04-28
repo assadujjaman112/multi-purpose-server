@@ -1,8 +1,8 @@
-const { getDb } = require("../config/db");
+const { findAllUsers, insertUser } = require("../services/users");
 
 async function getAllUsers(req, res) {
   try {
-    const result = await getDb().collection("users").find().toArray();
+    const result = await findAllUsers();
     res.send(result);
   } catch (err) {
     res.status(500).send({ error: "Failed to fetch users" });
@@ -11,7 +11,7 @@ async function getAllUsers(req, res) {
 
 async function createUser(req, res) {
   try {
-    const result = await getDb().collection("users").insertOne(req.body);
+    const result = await insertUser(req.body);
     res.send(result);
   } catch (err) {
     res.status(500).send({ error: "Failed to create user" });

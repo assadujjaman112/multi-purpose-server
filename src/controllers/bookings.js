@@ -1,8 +1,8 @@
-const { getDb } = require("../config/db");
+const { insertBooking } = require("../services/bookings");
 
 async function createBooking(req, res) {
   try {
-    const result = await getDb().collection("bookings").insertOne(req.body);
+    const result = await insertBooking(req.body);
     res.send(result);
   } catch (err) {
     res.status(500).send({ error: "Failed to create booking" });

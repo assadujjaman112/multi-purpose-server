@@ -1,8 +1,8 @@
-const { getDb } = require("../config/db");
+const { insertCartItem } = require("../services/carts");
 
 async function createCartItem(req, res) {
   try {
-    const result = await getDb().collection("carts").insertOne(req.body);
+    const result = await insertCartItem(req.body);
     res.send(result);
   } catch (err) {
     res.status(500).send({ error: "Failed to add item to cart" });
