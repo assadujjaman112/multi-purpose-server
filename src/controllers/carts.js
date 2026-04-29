@@ -23,6 +23,20 @@ async function createCartItem(req, res) {
   }
 }
 
+async function updateCartItem(req, res) {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+    if (!id || !quantity) {
+      return sendError(res, "Cart item ID and quantity are required", 400);
+    }
+    const query = { _id: new ObjectId(id) };
+    const result = await cartsService.updateCartItem(query, { quantity });
+    sendSuccess(res, result, 200);
+  } catch (err) {
+    sendError(res, err.message);
+  }
+}
 async function deleteCartItem(req, res) {
   try {
     const { id } = req.params;
@@ -44,4 +58,4 @@ async function deleteCartItem(req, res) {
   }
 }
 
-module.exports = { createCartItem, getCartItems, deleteCartItem };
+module.exports = { createCartItem, getCartItems, deleteCartItem, updateCartItem };

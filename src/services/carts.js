@@ -9,6 +9,9 @@ async function findCartItems(query) {
   return getDb().collection("carts").find(query).toArray();
 }
 
+async function updateCartItem(query, updateData) {
+  return getDb().collection("carts").updateOne(query, { $set: updateData });
+}
 async function removeCartItem(query) {
   return getDb().collection("carts").deleteOne(query);
 }
