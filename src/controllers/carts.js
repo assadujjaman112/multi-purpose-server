@@ -1,11 +1,13 @@
-const { insertCartItem, findCartItems } = require("../services/carts");
+const { ObjectId } = require("mongodb");
+const cartsService = require("../services/carts");
+
 const { sendSuccess, sendError } = require("../utils/response");
 
 async function getCartItems(req, res) {
   try {
     const { email } = req.query;
     const query = email ? { customerEmail: email } : {};
-    const data = await findCartItems(query);
+    const data = await cartsService.findCartItems(query);
     sendSuccess(res, data);
   } catch (err) {
     sendError(res, "Failed to get cart items");
@@ -14,11 +16,32 @@ async function getCartItems(req, res) {
 
 async function createCartItem(req, res) {
   try {
-    const data = await insertCartItem(req.body);
+    const data = await cartsService.insertCartItem(req.body);
     sendSuccess(res, data, 201);
   } catch (err) {
     sendError(res, "Failed to add item to cart");
   }
 }
 
-module.exports = { createCartItem, getCartItems };
+async function deleteCartItem(req, res) {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return sendError(res, "Cart item ID is required", 400);
+    }
+
+    const query = { _id: new ObjectId(id) };
+    const result = await cartsService.removeCartItem(query);
+
+    if (result.deletedCount === 0) {
+      return sendError(res, "Cart item not found", 404);
+    }
+
+    sendSuccess(res, { deletedCount: result.deletedCount });
+  } catch (err) {
+    sendError(res, "Failed to delete cart item");
+  }
+}
+
+module.exports = { createCartItem, getCartItems, deleteCartItem };

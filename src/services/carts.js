@@ -1,11 +1,16 @@
 const { getDb } = require("../config/db");
 
 async function insertCartItem(cartData) {
-  return getDb().collection("carts").insertOne(cartData);
+  const { _id, ...data } = cartData;
+  return getDb().collection("carts").insertOne(data);
 }
 
 async function findCartItems(query) {
   return getDb().collection("carts").find(query).toArray();
 }
 
-module.exports = { insertCartItem, findCartItems };
+async function removeCartItem(query) {
+  return getDb().collection("carts").deleteOne(query);
+}
+
+module.exports = { insertCartItem, findCartItems, removeCartItem };
