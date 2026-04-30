@@ -1,6 +1,4 @@
-const { ObjectId } = require("mongodb");
 const cartsService = require("../services/carts");
-
 const { sendSuccess, sendError } = require("../utils/response");
 
 async function getCartItems(req, res) {
@@ -27,17 +25,23 @@ async function updateCartItem(req, res) {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
+
     if (!id || !quantity) {
       return sendError(res, "Cart item ID and quantity are required", 400);
     }
 
-    const query = { _id: new ObjectId(id) };
-    const result = await cartsService.updateCartItem(query, { quantity });
-    sendSuccess(res, result, 200);
+    const result = await cartsService.updateCartItem(id, { quantity });
+
+    if (result.matchedCount === 0) {
+      return sendError(res, "Cart item not found", 404);
+    }
+
+    sendSuccess(res, { modifiedCount: result.modifiedCount });
   } catch (err) {
-    sendError(res, err.message);
+    sendError(res, "Failed to update cart item");
   }
 }
+
 async function deleteCartItem(req, res) {
   try {
     const { id } = req.params;
@@ -46,8 +50,7 @@ async function deleteCartItem(req, res) {
       return sendError(res, "Cart item ID is required", 400);
     }
 
-    const query = { _id: new ObjectId(id) };
-    const result = await cartsService.removeCartItem(query);
+    const result = await cartsService.removeCartItem(id);
 
     if (result.deletedCount === 0) {
       return sendError(res, "Cart item not found", 404);
@@ -59,9 +62,4 @@ async function deleteCartItem(req, res) {
   }
 }
 
-module.exports = {
-  createCartItem,
-  getCartItems,
-  deleteCartItem,
-  updateCartItem,
-};
+module.exports = { createCartItem, getCartItems, updateCartItem, deleteCartItem };
