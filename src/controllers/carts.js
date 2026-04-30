@@ -30,6 +30,7 @@ async function updateCartItem(req, res) {
     if (!id || !quantity) {
       return sendError(res, "Cart item ID and quantity are required", 400);
     }
+
     const query = { _id: new ObjectId(id) };
     const result = await cartsService.updateCartItem(query, { quantity });
     sendSuccess(res, result, 200);
@@ -58,4 +59,9 @@ async function deleteCartItem(req, res) {
   }
 }
 
-module.exports = { createCartItem, getCartItems, deleteCartItem, updateCartItem };
+module.exports = {
+  createCartItem,
+  getCartItems,
+  deleteCartItem,
+  updateCartItem,
+};

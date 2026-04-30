@@ -16,4 +16,9 @@ async function removeCartItem(query) {
   return getDb().collection("carts").deleteOne(query);
 }
 
-module.exports = { insertCartItem, findCartItems, removeCartItem };
+module.exports = {
+  insertCartItem,
+  findCartItems,
+  removeCartItem,
+  updateCartItem,
+};
