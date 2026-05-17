@@ -10,4 +10,7 @@ connectDB()
       console.log(`Server is running on port ${port}`);
     });
   })
-  .catch(console.dir);
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
